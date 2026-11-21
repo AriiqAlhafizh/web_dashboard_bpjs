@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react';
 
 import Header from '../components/Header';
 import KpiCards from '../components/KpiCards';
-import { dataKeplingDummy } from '../utils/DummyData';
+import KecamatanTables from '../components/KecamatanTables';
+import { dataKeplingDummy } from '../Utils/DummyData';
 
 
 export default function Home() {
@@ -50,6 +51,11 @@ export default function Home() {
           </div>
           
           <div className="flex-1 flex min-w-0 relative">
+                        {mountedTabs.KEC && (
+              <div className={`flex-1 flex min-w-0 ${activeTab === 'KEC' ? '' : 'hidden'}`}>
+                <KecamatanTables data={dataKepling} />
+              </div>
+            )}
           </div>
         </div>
 
