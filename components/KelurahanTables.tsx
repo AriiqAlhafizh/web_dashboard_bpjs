@@ -5,11 +5,107 @@ interface KeplingData {
   kecamatan?: string;
   kelurahan?: string;
   target?: number;
-  tk_rekap?: number; // TK AKTIF
+  tk_rekap?: number; 
   [key: string]: unknown;
 }
 
+const DataStudioDropdown = ({ title, options, selected, onChange }: {
+  title: string;
+  options: { label: string, metric: number }[];
+  selected: string[];
+  onChange: (val: string[]) => void;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const isAll = selected.includes('ALL');
+  const selectedCount = isAll ? options.length : selected.length;
+  const filteredOptions = options.filter(o => o.label.toLowerCase().includes(search.toLowerCase()));
+
+  const handleToggleAll = () => {
+    if (isAll) onChange([]); 
+    else onChange(['ALL']);  
+  };
+
+  const handleToggleItem = (label: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isAll) {
+      onChange(options.map(o => o.label).filter(l => l !== label));
+    } else {
+      if (selected.includes(label)) {
+        const newSel = selected.filter(l => l !== label);
+        onChange(newSel.length === 0 ? [] : newSel);
+      } else {
+        onChange([...selected, label]);
+      }
+    }
+  };
+
+  const handleHanya = (label: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    onChange([label]); 
+  };
+
+  return (
+    <div className="relative flex-1" ref={dropdownRef}>
+      <div 
+        className="p-2.5 text-xs border border-gray-300 rounded shadow-sm text-gray-700 bg-white flex justify-between items-center cursor-pointer font-medium transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span>{title} {selectedCount < options.length ? `(${selectedCount})` : ''}</span>
+        <span className="text-[10px]">▼</span>
+      </div>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 mt-1 w-72 bg-white shadow-2xl rounded-md z-50 border border-gray-300 overflow-hidden flex flex-col">
+          <div className="bg-[#9e9e9e] text-black px-3 py-2 flex items-center gap-3 font-bold text-xs">
+            <input type="checkbox" className="w-4 h-4 cursor-pointer accent-gray-700" checked={isAll} onChange={handleToggleAll} />
+            <span className="flex-1">{title} ({selectedCount})</span>
+            <span>TK AKTIF</span>
+          </div>
+          
+          <div className="p-2 border-b border-gray-200 bg-white">
+            <div className="flex items-center gap-2 px-2 py-1.5 border border-gray-300 rounded-sm">
+              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Ketik untuk menelusuri" className="outline-none text-xs w-full bg-transparent" />
+            </div>
+          </div>
+
+          <div className="max-h-[250px] overflow-y-auto bg-white">
+            {filteredOptions.map(opt => {
+              const isChecked = isAll || selected.includes(opt.label);
+              return (
+                <div key={opt.label} className="group flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer border-b border-gray-50 last:border-0" onClick={(e) => handleToggleItem(opt.label, e)}>
+                  <input type="checkbox" className="w-4 h-4 cursor-pointer pointer-events-none accent-gray-700" checked={isChecked} readOnly />
+                  <span className="text-[11px] text-gray-700 flex-1 truncate">{opt.label}</span>
+                  <button 
+                    onClick={(e) => handleHanya(opt.label, e)}
+                    className="opacity-0 group-hover:opacity-100 hover:underline text-gray-600 text-[10px] font-bold px-1 rounded transition-opacity"
+                  >
+                    HANYA
+                  </button>
+                  <span className="text-[11px] text-gray-600 w-10 text-right">{opt.metric.toLocaleString('id-ID')}</span>
+                </div>
+              )
+            })}
+            {filteredOptions.length === 0 && <div className="p-4 text-center text-xs text-gray-500">Tidak ada hasil.</div>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function KelurahanTables({ 
   data = [], 
@@ -214,10 +310,10 @@ export default function KelurahanTables({
                     <div className="flex items-center justify-center text-center leading-tight">Jumlah<br/>Kepling {getSortIcon('Jumlah Kepling')}</div>
                   </th>
                   <th onClick={() => handleSort('TARGET')} className="px-3 py-3 w-[90px] cursor-pointer group hover:bg-[#1565c0] transition-colors select-none border-r border-blue-600/30">
-                    <div className="flex items-center justify-center text-center">TARGET {getSortIcon('TARGET')}</div>
+                    <div className="flex items-center justify-center text-center">Target {getSortIcon('TARGET')}</div>
                   </th>
                   <th onClick={() => handleSort('TK AKTIF')} className="px-3 py-3 w-[90px] cursor-pointer group hover:bg-[#1565c0] transition-colors select-none border-r border-blue-600/30">
-                    <div className="flex items-center justify-center text-center uppercase">JUMLAH <br></br> AKUISISI {getSortIcon('TK AKTIF')}</div>
+                    <div className="flex items-center justify-center text-center uppercase">jumlah <br></br> akuisisi {getSortIcon('TK AKTIF')}</div>
                   </th>
                   <th onClick={() => handleSort('GAP')} className="px-3 py-3 w-[90px] cursor-pointer group hover:bg-[#1565c0] transition-colors select-none border-r border-blue-600/30">
                     <div className="flex items-center justify-center text-center uppercase">GAP {getSortIcon('GAP')}</div>
@@ -252,6 +348,11 @@ export default function KelurahanTables({
       </div>
 
       <div className="w-[500px] flex flex-col gap-4 shrink-0">
+        <div className="flex gap-4">
+          <DataStudioDropdown title="Kecamatan" options={kecOptions} selected={filterKec} onChange={(newSel) => { setFilterKec(newSel); setFilterKel(['ALL']); }} />
+          <DataStudioDropdown title="Kelurahan" options={kelOptions} selected={filterKel} onChange={(newSel) => setFilterKel(newSel)} />
+        </div>
+
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col transition-colors">
           <div className="px-4 py-2 bg-white border-b border-gray-200">
             <h2 className="font-bold text-[14px] text-black">Top 10 Kelurahan</h2>

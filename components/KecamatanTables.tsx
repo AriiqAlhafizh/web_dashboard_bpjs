@@ -5,7 +5,7 @@ interface KeplingData {
   kecamatan?: string;
   kelurahan?: string;
   target?: number;
-  tk_rekap?: number; // TK AKTIF
+  tk_rekap?: number; 
   [key: string]: unknown;
 }
 
@@ -150,10 +150,10 @@ export default function KecamatanTables({ data = [] }: { data?: KeplingData[] })
                     <div className="flex items-center justify-center text-center leading-tight">Jumlah<br/>Kepling {getSortIcon('Jumlah Kepling')}</div>
                   </th>
                   <th onClick={() => handleSort('TARGET')} className="px-2 py-3 w-[90px] cursor-pointer group hover:bg-[#1565c0] transition-colors select-none border-r border-blue-600/30">
-                    <div className="flex items-center justify-center text-center">TARGET {getSortIcon('TARGET')}</div>
+                    <div className="flex items-center justify-center text-center">Target {getSortIcon('TARGET')}</div>
                   </th>
                   <th onClick={() => handleSort('TK AKTIF')} className="px-2 py-3 w-[90px] cursor-pointer group hover:bg-[#1565c0] transition-colors select-none border-r border-blue-600/30">
-                    <div className="flex items-center justify-center text-center">JUMLAH <br></br> AKUISISI {getSortIcon('TK AKTIF')}</div>
+                    <div className="flex items-center justify-center text-center">Jumlah <br></br> Akuisisi {getSortIcon('TK AKTIF')}</div>
                   </th>
                   <th onClick={() => handleSort('GAP')} className="px-2 py-3 w-[80px] cursor-pointer group hover:bg-[#1565c0] transition-colors select-none border-r border-blue-600/30">
                     <div className="flex items-center justify-center text-center">GAP {getSortIcon('GAP')}</div>
