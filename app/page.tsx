@@ -1,13 +1,19 @@
 // app/page.tsx
+
 "use client";
 import { useState, useEffect } from 'react';
 
 import Header from '../components/Header';
+import KpiCards from '../components/KpiCards';
+import { dataKeplingDummy } from '../utils/DummyData';
+
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'KEC' | 'KEL' | 'KEPLING'>('KEC');
   const [filterKec, setFilterKec] = useState<string[]>(['ALL']);
   const [filterKel, setFilterKel] = useState<string[]>(['ALL']);
+
+  const dataKepling = dataKeplingDummy;
 
   const [mountedTabs, setMountedTabs] = useState<Record<string, boolean>>({
     KEC: true,
@@ -35,6 +41,12 @@ export default function Home() {
         
         <div className="p-4 flex gap-4 mt-2 flex-1">
           <div className="flex-none">
+                        <KpiCards 
+              data={dataKepling} 
+              activeTab={activeTab} 
+              filterKec={filterKec} 
+              filterKel={filterKel} 
+            />
           </div>
           
           <div className="flex-1 flex min-w-0 relative">
