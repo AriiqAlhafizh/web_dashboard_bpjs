@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import KpiCards from '../components/KpiCards';
 import KecamatanTables from '../components/KecamatanTables';
+import KelurahanTables from '../components/KelurahanTables'; 
 import { dataKeplingDummy } from '../Utils/DummyData';
 
 
@@ -51,11 +52,23 @@ export default function Home() {
           </div>
           
           <div className="flex-1 flex min-w-0 relative">
-                        {mountedTabs.KEC && (
+            {mountedTabs.KEC && (
               <div className={`flex-1 flex min-w-0 ${activeTab === 'KEC' ? '' : 'hidden'}`}>
                 <KecamatanTables data={dataKepling} />
               </div>
             )}
+            {mountedTabs.KEL && (
+              <div className={`flex-1 flex min-w-0 ${activeTab === 'KEL' ? '' : 'hidden'}`}>
+                <KelurahanTables 
+                  data={dataKepling} 
+                  filterKec={filterKec} 
+                  setFilterKec={setFilterKec} 
+                  filterKel={filterKel} 
+                  setFilterKel={setFilterKel} 
+                />
+              </div>
+            )}
+
           </div>
         </div>
 
