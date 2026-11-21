@@ -185,6 +185,70 @@ export default function KecamatanTables({ data = [] }: { data?: KeplingData[] })
       </div>
 
       <div className="w-[470px] flex flex-col gap-4 shrink-0">
+
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col overflow-hidden transition-colors">
+          <div className="px-4 py-2 bg-white border-b border-gray-200">
+            <h2 className="font-bold text-[14px] text-black">Top 10 Kecamatan</h2>
+          </div>
+          <table className="w-full text-[10px] text-left table-fixed">
+            <thead className="bg-[#06AF00] text-white font-bold whitespace-nowrap">
+              <tr>
+                <th className="px-2 py-2 w-[40px] text-center">No.</th>
+                <th className="px-2 py-2 w-[160px]">Kecamatan</th>
+                <th className="px-1 py-2 w-[65px] text-center">TARGET</th>
+                <th className="px-1 py-2 w-[65px] text-center leading-tight">JUMLAH <br></br> AKUISISI</th>
+                <th className="px-1 py-2 w-[60px] text-center">GAP</th>
+                <th className="px-2 py-2 w-[70px] text-center">%</th>
+              </tr>
+            </thead>
+            <tbody>
+              {top10Data.map((row, index) => (
+                <tr key={index} className="border-b border-gray-100 even:bg-[#eef5e1] odd:bg-white hover:bg-green-50 transition-colors">
+                  <td className="px-2 py-2 text-center text-gray-900 font-bold truncate">{index + 1}.</td>
+                  <td className="px-2 py-2 font-bold uppercase text-gray-800 truncate">{getVal(row, 'Kecamatan')}</td>
+                  <td className="px-1 py-2 text-center text-gray-600 truncate">{getVal(row, 'TARGET')}</td>
+                  <td className="px-1 py-2 text-center text-gray-600 truncate">{getVal(row, 'TK AKTIF')}</td>
+                  <td className="px-1 py-2 text-center text-gray-600 truncate">{getVal(row, 'GAP')}</td>
+                  <td className="px-2 py-2 text-center font-bold text-white border-l border-white/20 whitespace-nowrap" style={{ backgroundColor: getSharedColor(getVal(row, '%')) }}>
+                    {getVal(row, '%')}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col overflow-hidden transition-colors">
+          <div className="px-4 py-2 bg-white border-b border-gray-200">
+            <h2 className="font-bold text-[14px] text-black">Worst 10 Kecamatan</h2>
+          </div>
+          <table className="w-full text-[10px] text-left table-fixed">
+            <thead className="bg-[#FF0000] text-white font-bold whitespace-nowrap">
+              <tr>
+                <th className="px-2 py-2 w-[40px] text-center">No.</th>
+                <th className="px-2 py-2 w-[160px]">Kecamatan</th>
+                <th className="px-1 py-2 w-[65px] text-center">TARGET</th>
+                <th className="px-1 py-2 w-[65px] text-center leading-tight">JUMLAH <br></br> AKUISISI</th>
+                <th className="px-1 py-2 w-[60px] text-center">GAP</th>
+                <th className="px-2 py-2 w-[70px] text-center">%</th>
+              </tr>
+            </thead>
+            <tbody>
+              {worst10Data.map((row, index) => (
+                <tr key={index} className="border-b border-gray-100 even:bg-red-50 odd:bg-white hover:bg-red-100 transition-colors">
+                  <td className="px-2 py-2 text-center text-gray-900 font-bold truncate">{index + 1}.</td>
+                  <td className="px-2 py-2 font-bold uppercase text-gray-800 truncate">{getVal(row, 'Kecamatan')}</td>
+                  <td className="px-1 py-2 text-center text-gray-600 truncate">{getVal(row, 'TARGET')}</td>
+                  <td className="px-1 py-2 text-center text-gray-600 truncate">{getVal(row, 'TK AKTIF')}</td>
+                  <td className="px-1 py-2 text-center text-gray-600 truncate">{getVal(row, 'GAP')}</td>
+                  <td className="px-2 py-2 text-center font-bold text-white border-l border-white/20 whitespace-nowrap" style={{ backgroundColor: getSharedColor(getVal(row, '%')) }}>
+                    {getVal(row, '%')}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
