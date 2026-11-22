@@ -191,7 +191,65 @@ export default function KeplingTables({
   const top200Data = sortedDataDesc.slice(0, 200);
   const worst200Data = sortedDataAsc.slice(0, 200);
 
-  
+  const renderDetailPeserta = (keplingName: string) => {
+    if (expandedKepling !== keplingName) return null;
+    
+    const pesertaDetail = rekapData.filter(
+      r => getVal(r, 'Wilayah').trim().toUpperCase() === keplingName.trim().toUpperCase() &&
+           (getVal(r, 'Status TK') || "").trim().toUpperCase() === 'AKTIF'
+    );
+
+    return (
+      <tr className="bg-blue-50 shadow-inner">
+        <td colSpan={6} className="p-4 border-b border-blue-200">
+          <div className="bg-white rounded-md border border-blue-300 shadow-sm overflow-hidden max-h-[300px] flex flex-col w-full">
+            <div className="px-3 py-2 bg-[#e3f2fd] border-b border-blue-200 flex justify-between items-center">
+              <span className="text-xs font-bold text-[#1565c0]">Daftar Peserta Aktif: {keplingName}</span>
+              {!isRekapLoading && (
+                <span className="text-xs font-semibold text-[#1565c0] bg-white px-2 py-0.5 rounded-full border border-blue-200">
+                  Total: {pesertaDetail.length}
+                </span>
+              )}
+            </div>
+            <div className="overflow-y-auto flex-1">
+              <table className="w-full text-[10px] text-left">
+                <thead className="bg-gray-100 text-gray-700 font-bold sticky top-0">
+                  <tr>
+                    <th className="px-3 py-2 w-10 text-center border-b border-gray-200">No.</th>
+                    <th className="px-3 py-2 border-b border-gray-200 w-32">NIK</th>
+                    <th className="px-3 py-2 border-b border-gray-200">Nama TK</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {isRekapLoading ? (
+                    <tr>
+                      <td colSpan={3} className="px-3 py-8 text-center text-blue-600 font-medium animate-pulse">
+                        Sinkronisasi daftar peserta dari database... Mohon tunggu sebentar.
+                      </td>
+                    </tr>
+                  ) : pesertaDetail.length > 0 ? (
+                    pesertaDetail.map((peserta, i) => (
+                      <tr key={i} className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
+                        <td className="px-3 py-1.5 text-center text-gray-500">{i + 1}.</td>
+                        <td className="px-3 py-1.5 font-mono text-gray-600">{getVal(peserta, 'NIK')}</td>
+                        <td className="px-3 py-1.5 font-medium text-gray-800">{getVal(peserta, 'Nama TK')}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={3} className="px-3 py-6 text-center text-gray-400 italic">
+                        Tidak ada peserta dengan status AKTIF terdaftar di wilayah ini.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </td>
+      </tr>
+    );
+  };
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">
@@ -213,7 +271,7 @@ export default function KeplingTables({
                   <th className="px-3 py-3 w-8 text-center">No.</th>
                   <th className="px-3 py-3">Kepala Lingkungan</th>
                   <th className="px-3 py-3 text-center uppercase">Target</th>
-                  <th className="px-3 py-3 text-center uppercase">Jumlah <br></br> Akuisisi</th>
+                  <th className="px-3 py-3 text-center uppercase">Jumlah <br></br> Akuisisi</th>   
                   <th className="px-3 py-3 text-center uppercase">GAP</th>
                   <th className="px-3 py-3 text-center">%</th>
                 </tr>
@@ -239,7 +297,7 @@ export default function KeplingTables({
                           {getVal(row, '%')}
                         </td>
                       </tr>
-                      
+                      {renderDetailPeserta(keplingName)}
                     </React.Fragment>
                   );
                 })}
@@ -286,7 +344,7 @@ export default function KeplingTables({
                           {getVal(row, '%')}
                         </td>
                       </tr>
-                     
+                      {renderDetailPeserta(keplingName)}
                     </React.Fragment>
                   );
                 })}
