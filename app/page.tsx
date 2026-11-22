@@ -7,7 +7,8 @@ import Header from '../components/Header';
 import KpiCards from '../components/KpiCards';
 import KecamatanTables from '../components/KecamatanTables';
 import KelurahanTables from '../components/KelurahanTables'; 
-import { dataKeplingDummy } from '../Utils/DummyData';
+import KeplingTables from '../components/KeplingTables';
+import { dataKeplingDummy, rekapDummy } from '../Utils/DummyData';
 
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
   const [filterKel, setFilterKel] = useState<string[]>(['ALL']);
 
   const dataKepling = dataKeplingDummy;
+  const rekapData = rekapDummy;
 
   const [mountedTabs, setMountedTabs] = useState<Record<string, boolean>>({
     KEC: true,
@@ -61,6 +63,18 @@ export default function Home() {
               <div className={`flex-1 flex min-w-0 ${activeTab === 'KEL' ? '' : 'hidden'}`}>
                 <KelurahanTables 
                   data={dataKepling} 
+                  filterKec={filterKec} 
+                  setFilterKec={setFilterKec} 
+                  filterKel={filterKel} 
+                  setFilterKel={setFilterKel} 
+                />
+              </div>
+            )}
+            {mountedTabs.KEPLING && (
+              <div className={`flex-1 flex min-w-0 ${activeTab === 'KEPLING' ? '' : 'hidden'}`}>
+                <KeplingTables 
+                  data={dataKepling}
+                  rekapData={rekapData} // 💡 INI TAMBAHAN BARU
                   filterKec={filterKec} 
                   setFilterKec={setFilterKec} 
                   filterKel={filterKel} 
